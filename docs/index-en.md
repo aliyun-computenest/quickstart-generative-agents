@@ -1,127 +1,205 @@
-# Generative Agents社区版部署文档
+<h1>Generative Agents Community Edition Deployment Documentation</h1>
 
-## 概述
-Generative Agents社区版是基于2023年4月美国斯坦福大学和Google Research所属的研究人员发表的论文“Generative Agents: Interactive Simulacra of HumanBehavior”的开源代码部署的服务。这项研究通过使用ChatGPT等技术，模拟了25个角色在一个虚拟世界中一起生活的情景。这些角色具有不同的虚构人格，并通过自发的行动展开活动。他们在一个复古RPG游戏风格的环境中，拥有各自独立的生活模式，从日常起床、工作到玩耍等。角色之间可以通过自然语言进行交流，并通过相遇和对话交换信息并形成记忆。  
-在一项评估中，这些生成的代理人产生可信的个人和紧急的社会行为：例如，从一个用户指定的概念开始一个代理人想要举办情人节聚会，这些代理人在接下来的两天里主动地向聚会发出邀请，结交新的熟人，在聚会上互相约约，并协调在合适的时间一起参加聚会。 论文证明，通过融合大型语言模型与计算，交互代理，这项工作引入了建筑和交互模式使可信的模拟人类行为。
-计算巢目前已上架了基于开源代码的Generative Agents，您只需在创建页选配好云服务器（ECS）参数，计算巢将自动为您创建带有Generative Agents的云服务器。创建完成后，您只需登陆ECS即可使用体验Generative Agents虚拟社区。本文向您介绍如何开通计算巢上的Generative Agents服务以及部署流程和使用说明。使用期间若发现任何问题，欢迎反馈交流。
-![generate-agent-14](generate-agent-14.png)
-## 实例说明
+<h2>Overview</h2>
 
-Generative Agents部署的为社区开源版本，源码参考[Github Repo](https://github.com/joonspk-research/generative_agents)。
+<p>The Generative Agents Community Edition is a service deployed based on the open-source code from the paper "Generative Agents: Interactive Simulacra of Human Behavior," published in April 2023 by researchers from Stanford University and Google Research. This study used technologies like ChatGPT to simulate a scenario where 25 characters live together in a virtual world. These characters possess distinct fictional personalities and engage in activities through spontaneous actions. Set in a retro RPG-style environment, they have independent lifestyle patterns, ranging from waking up and working to playing. Characters can communicate via natural language, exchanging information and forming memories through encounters and conversations.</p>
 
-## 部署流程
+<p>In an evaluation, these generated agents produced credible individual and emergent social behaviors. For example, starting from a user-specified concept where one agent wanted to host a Valentine's Day party, the agents proactively invited others to the party over the next two days, made new acquaintances, arranged dates at the party, and coordinated to attend together at the appropriate time. The paper demonstrates that by integrating Large Language Models with computational interactive agents, this work introduces architectural and interaction patterns that enable credible simulations of human behavior.</p>
 
-### 0. 准备工作
+<p>Compute Nest has now listed Generative Agents based on open-source code. You only need to select the Elastic Compute Service (ECS) parameters on the creation page, and Compute Nest will automatically create an ECS instance with Generative Agents for you. After creation, you simply log in to the ECS to experience the Generative Agents virtual community. This document introduces how to activate the Generative Agents service on Compute Nest, as well as the deployment process and usage instructions. If you encounter any issues during use, feedback and discussion are welcome.</p>
 
-在正式开始使用前，您需要一个阿里云账号，对ECS、VPC等资源进行访问和创建操作。
+<h2>Instance Description</h2>
 
-- 若您使用个人账号，可以直接创建服务实例
-- 若您使用RAM用户创建服务实例，且是第一次使用阿里云计算巢
-    - 需要在创建服务实例前，对使用的RAM用户的账号添加相应资源的权限。添加RAM权限的详细操作，请参见[为RAM用户授
-      权](https://help.aliyun.com/document_detail/121945.html)。所需权限如下表所示。
-    - 且需要授权创建关联角色，参考下图，选中 **同意授权并创建关联角色**
+<p>The Generative Agents deployment is the community open-source version. For source code, please refer to the <a href="https://github.com/joonspk-research/generative_agents" target="_blank">Github Repo</a>.</p>
 
-| 权限策略名称                    | 备注                                    |
-|---------------------------------|---------------------------------------|
-| AliyunECSFullAccess             | 管理云服务器服务（ECS）的权限             |
-| AliyunVPCFullAccess             | 管理专有网络（VPC）的权限                 |
-| AliyunROSFullAccess             | 管理资源编排服务（ROS）的权限             |
-| AliyunComputeNestUserFullAccess | 管理计算巢服务（ComputeNest）的用户侧权限 |
-| AliyunCloudMonitorFullAccess    | 管理云监控（CloudMonitor）的权限          |
+<h2>Deployment Process</h2>
 
-其次，由于Generative Agents底层调用了OpenAI的text-davinci-003模型，因此还需要您提前注册OpenAI的账号，此账号具有调用OpenAI API的权限。
+<h3>0. Preparation</h3>
 
-### 1. 部署入口
+<p>Before formally using the service, you need an Alibaba Cloud account to access and create resources such as ECS and VPC.</p>
 
-您可以在阿里云计算巢自行搜索“Generative Agents社区版”，也可以通过下述部署链接快速到达。
+<ul>
+    <li>If you are using a personal account, you can create service instances directly.</li>
+    <li>If you are using a RAM user to create service instances, and it is your first time using Alibaba Cloud Compute Nest:
+        <ul>
+            <li>You need to add permissions for the corresponding resources to the RAM user account before creating the service instance. For detailed operations on adding RAM permissions, please refer to <a href="https://help.aliyun.com/document_detail/121945.html" target="_blank">Authorize RAM Users</a>. The required permissions are listed in the table below.</li>
+            <li>You also need to authorize the creation of associated roles. Refer to the figure below and select <strong>Agree to Authorize and Create Associated Role</strong>.</li>
+        </ul>
+    </li>
+</ul>
 
-[部署链接](https://computenest.console.aliyun.com/user/cn-hangzhou/serviceInstanceCreate?ServiceId=service-744d0d3d4a4548a2812b)=
+<table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+        <tr>
+            <th>Permission Policy Name</th>
+            <th>Remarks</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>AliyunECSFullAccess</td>
+            <td>Permission to manage Elastic Compute Service (ECS)</td>
+        </tr>
+        <tr>
+            <td>AliyunVPCFullAccess</td>
+            <td>Permission to manage Virtual Private Cloud (VPC)</td>
+        </tr>
+        <tr>
+            <td>AliyunROSFullAccess</td>
+            <td>Permission to manage Resource Orchestration Service (ROS)</td>
+        </tr>
+        <tr>
+            <td>AliyunComputeNestUserFullAccess</td>
+            <td>User-side permission to manage Compute Nest services</td>
+        </tr>
+        <tr>
+            <td>AliyunCloudMonitorFullAccess</td>
+            <td>Permission to manage Cloud Monitor</td>
+        </tr>
+    </tbody>
+</table>
 
-### 2. 创建Generative Agents服务实例
+<p>Additionally, since Generative Agents calls OpenAI's text-davinci-003 model at the底层 layer, you need to register an OpenAI account in advance. This account must have permission to call the OpenAI API.</p>
 
-#### 2.1 参数列表
+<h3>1. Deployment Entry</h3>
 
-您在创建服务实例的过程中，需要配置服务实例信息的参数列表，具体如下。
+<p>You can search for "Generative Agents Community Edition" in Alibaba Cloud Compute Nest, or quickly reach it via the deployment link below:</p>
 
-| 参数组        | 参数项         | 示例           | 说明                                                                                                                               |
-|------------|-------------|--------------|----------------------------------------------------------------------------------------------------------------------------------|
-| 服务实例名称     | N/A         | test         | 实例的名称                                                                                                                            |
-| 地域         | N/A         | 华东1（杭州）      | 选中服务实例的地域，建议就近选中，以获取更好的网络延时。                                                                                                     |
-| 付费类型配置     | 付费类型        | 按量付费         | 按实际情况选择付费类型                                                                                                                      |
-| ECS实例配置    | 实例类型        | ecs.g6.large | 按实际情况选择实例规格                                                                                                                      |
-| ECS实例登录信息  | 实例密码        | ********     | 设置实例密码。长度8~30个字符，必须包含三项（大写字母、小写字母、数字、 ()`~!@#$%^&*_-+={}[]:;'<>,.?/                                                              |
-| OpenAI 密钥配置   | OpenAI Key   | sk-xxx       | OpenAI 密钥，使用Generative Agents将从密钥对应账户扣费，此密钥由OpenAI提供，阿里云不对此密钥做任何处理。默认使用text-davinci-003模型，登陆访问 [OpenAI 官网](https://openai.com/)。 |
-| 可用区配置      | 可用区         | 可用区I         | 地域下的不同可用区域，确保实例非空                                                                                                                |
-| VPC设置      | 是否新建VPC     | 是            | 若是，计算巢将自动创建VPC和Vswitch，若否，则需要填入已经创建好的VPC和Vswitch                                                                                 |
-| VPC设置 | 专有网络VPC实例ID | vpc-xxx      | 按实际情况，选择专有网络的ID。                                                                                                                 |
-| VPC设置 | 交换机实例ID     | vsw-xxx      | 按实际情况，选择交换机ID。若找不到交换机, 可尝试切换地域和可用区。                                                                                              |
+<p><a href="https://computenest.console.aliyun.com/user/cn-hangzhou/serviceInstanceCreate?ServiceId=service-744d0d3d4a4548a2812b" target="_blank">Deployment Link</a></p>
 
-#### 2.2 具体步骤
+<h3>2. Create Generative Agents Service Instance</h3>
 
-创建服务按如下步骤进行:
+<h4>2.1 Parameter List</h4>
 
-- 创建服务实例，填写服务实例名称（非必填）
-- 选择地域，如下图中“新加坡”
+<p>During the process of creating a service instance, you need to configure the parameter list for the service instance information, as detailed below:</p>
 
-![generate-agent-1](generate-agent-1.png)
+<table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+        <tr>
+            <th>Parameter Group</th>
+            <th>Parameter Item</th>
+            <th>Example</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan="1">Service Instance Name</td>
+            <td>N/A</td>
+            <td>test</td>
+            <td>Name of the instance</td>
+        </tr>
+        <tr>
+            <td rowspan="1">Region</td>
+            <td>N/A</td>
+            <td>China (Hangzhou)</td>
+            <td>Select the region for the service instance. It is recommended to select the nearest region to obtain better network latency.</td>
+        </tr>
+        <tr>
+            <td rowspan="1">Billing Configuration</td>
+            <td>Billing Method</td>
+            <td>Pay-As-You-Go</td>
+            <td>Select the billing method based on actual needs.</td>
+        </tr>
+        <tr>
+            <td rowspan="1">ECS Instance Configuration</td>
+            <td>Instance Type</td>
+            <td>ecs.g6.large</td>
+            <td>Select the instance specification based on actual needs.</td>
+        </tr>
+        <tr>
+            <td rowspan="1">ECS Instance Login Information</td>
+            <td>Instance Password</td>
+            <td>********</td>
+            <td>Set the instance password. Length: 8-30 characters. Must contain at least three of the following: uppercase letters, lowercase letters, digits, and special symbols ()`~!@#$%^&*_-+={}[]:;'<>,.?/</td>
+        </tr>
+        <tr>
+            <td rowspan="1">OpenAI Key Configuration</td>
+            <td>OpenAI Key</td>
+            <td>sk-xxx</td>
+            <td>OpenAI Key. Using Generative Agents will deduct fees from the account corresponding to this key. This key is provided by OpenAI, and Alibaba Cloud does not process this key in any way. By default, it uses the text-davinci-003 model. Log in to visit the <a href="https://openai.com/" target="_blank">OpenAI Official Website</a>.</td>
+        </tr>
+        <tr>
+            <td rowspan="1">Availability Zone Configuration</td>
+            <td>Availability Zone</td>
+            <td>Zone I</td>
+            <td>Different availability zones within the region. Ensure the zone has available resources.</td>
+        </tr>
+        <tr>
+            <td rowspan="3">VPC Settings</td>
+            <td>Create New VPC?</td>
+            <td>Yes</td>
+            <td>If yes, Compute Nest will automatically create a VPC and VSwitch. If no, you need to fill in the IDs of existing VPC and VSwitch.</td>
+        </tr>
+        <tr>
+            <td>VPC Instance ID</td>
+            <td>vpc-xxx</td>
+            <td>Select the VPC ID based on actual situation.</td>
+        </tr>
+        <tr>
+            <td>VSwitch Instance ID</td>
+            <td>vsw-xxx</td>
+            <td>Select the VSwitch ID based on actual situation. If the VSwitch cannot be found, try switching regions and availability zones.</td>
+        </tr>
+    </tbody>
+</table>
 
-- 选择实例类型: 默认选择ecs.g6.large
-- 配置实例的密码
-![generate-agent-12](generate-agent-12.png)
+<h4>2.2 Specific Steps</h4>
 
-- OpenAI密钥配置：输入OpenAI账号所对应的OpenAIKey，格式为“sk-……”。计算巢仅将此OPENAIKey传入Generative Agents作为调用API凭证，不会执行如记录、校验、鉴权等任何操作。为保证后续正常使用，请保证此Key所对应账号具有访问权限且余额充足。
-![generate-agent-3](generate-agent-3.png)
-- 选择部署区域，如下图中“可用区A”
-<img src="generate-agent-2.png" alt="generate-agent-2" width="1200">
-- VPC设置：可选新建或填入已有VPC/Vswitch
-![generate-agent-4](generate-agent-4.png)
+<p>Create the service by following the steps below:</p>
 
-- 点击下一步，进入订单确认页面
-- 勾选“我已阅读并同意《计算巢服务协议》”中的复选框
-- 点击左下角立即创建，即可创建服务实例
-<img src="generate-agent-5.png" alt="generate-agent-5" width="1200">
+<ol>
+    <li>Create a service instance and fill in the service instance name (optional).</li>
+    <li>Select the region, such as "Singapore" in the figure below.</li>
+    <li>Select the instance type: Default is ecs.g6.large.</li>
+    <li>Configure the instance password.</li>
+    <li><strong>OpenAI Key Configuration:</strong> Enter the OpenAI Key corresponding to your OpenAI account, formatted as "sk-...". Compute Nest only passes this OPENAI Key to Generative Agents as a credential for calling the API and will not perform any operations such as recording, validation, or authentication. To ensure normal subsequent use, please ensure that the account corresponding to this Key has access permissions and sufficient balance.</li>
+    <li>Select the deployment zone, such as "Zone A" in the figure below.</li>
+    <li><strong>VPC Settings:</strong> Choose to create a new one or fill in existing VPC/VSwitch.</li>
+    <li>Click Next to enter the order confirmation page.</li>
+    <li>Check the checkbox for "I have read and agree to the 'Compute Nest Service Agreement'".</li>
+    <li>Click "Create Now" in the bottom left corner to create the service instance.</li>
+</ol>
 
-### 3. 启动Generative Agents服务
+<h3>3. Start Generative Agents Service</h3>
 
-查看服务实例：服务实例创建成功后，部署时间需要1～2分钟。部署完成后，页面上可以看到对应的服务实例，如下图
-![generate-agent-6](generate-agent-6.png)
+<p><strong>View Service Instance:</strong> After the service instance is successfully created, the deployment takes about 1-2 minutes. Once deployment is complete, you can see the corresponding service instance on the page.</p>
 
-点击该服务实例可进入服务实例详情。
-![generate-agent-7](generate-agent-7.png)
+<p>Click on the service instance to enter the service instance details.</p>
 
-点击登录地址可以在浏览器看到如下界面，此时表示前端服务已经成功启动：
-![generate-agent-8](generate-agent-8.png)
+<p>Click the login address to view the following interface in your browser, indicating that the frontend service has started successfully:</p>
 
-接下来需要通过命令行交互式方式启动后端服务，首先需要登陆Ecs实例中，点击：资源-远程连接-免密登陆：
-![generate-agent-9](generate-agent-9.png)
+<p>Next, you need to start the backend service via command-line interaction. First, log in to the ECS instance. Click: <strong>Resources > Remote Connection > Password-Free Login</strong>.</p>
 
-选择会话管理-云助手后点击确定，即可进入ECS：
-![generate-agent-10](generate-agent-10.png)
+<p>Select <strong>Session Management - Cloud Assistant</strong> and click Confirm to enter the ECS.</p>
 
-进入实例后执行以下命令启动后端模拟器服务:
-```
-    sudo su
-    conda activate agent
-    cd /home/ecs-assist-user/generative_agents/reverie/backend_server
-    python reverie.py
-```
-执行成功后会看到如下输出,出现命令行提示符，询问以下内容：" "Enter the name of the forked simulation: ":
-<img src="generate-agent-11.png" alt="generate-agent-11" width="1200">
-要启动一个包含Isabella Rodriguez、Maria Lopez和Klaus Mueller的3个代理的模拟，请输入以下内容：
-```
-base_the_ville_isabella_maria_klaus
-```
-然后将提示："Enter the name of the new simulation:"。输入任何名称来表示您当前的模拟（例如，只输入"mytest-simulation"即可）,注意每次启动需要输入不同的名字，否则会启动失败。
-如果想输入一个已经存在的名称且能正常启动，需要提前删除
-/home/ecs-assist-user/generative_agents/environment/frontend_server/storage目录下已经创建过的同名文件夹。
-```
-simulation-test-1
-```
-在您的浏览器上，导航到http://{{实例公网IP}}:8000/simulator_home。您应该可以看到Smallville的地图，以及地图上活动代理的列表。您可以使用键盘箭头在地图上移动。请保持此标签打开。要运行模拟，请在响应“输入选项”提示时在您的模拟服务器中键入以下命令。
-```
-run <step-count>
-```
-请注意，您需要将上述的替换为表示您想要模拟的游戏步骤数量的整数。例如，如果您想要模拟100个游戏步骤，您应该输入run 100。一个游戏步骤代表游戏中的10秒时间。 您的模拟应该在运行中，您将在浏览器中看到代理在地图上移动（您可以通过键盘上下左右按键查看地图）。一旦模拟运行完成，"Enter option"提示将重新出现。此时，您可以通过重新输入run命令并输入您想要的游戏步骤来模拟更多的步骤，通过输入exit来退出模拟而不保存，或者通过输入fin来保存并退出。 下次运行模拟服务器时，您可以通过将您的模拟名称作为forked simulation提供，来访问保存的模拟。这将允许您从离开的地方重新启动模拟。
-<img src="generate-agent-13.png" alt="generate-agent-13" width="1200">
-### 更多功能
-- 请参考[Generative Agents GitHub官方文档](https://github.com/joonspk-research/generative_agents)
+<p>After entering the instance, execute the following commands to start the backend simulator service:</p>
+
+<pre><code>sudo su
+conda activate agent
+cd /home/ecs-assist-user/generative_agents/reverie/backend_server
+python reverie.py</code></pre>
+
+<p>Upon successful execution, you will see the following output, appearing as a command prompt asking: "Enter the name of the forked simulation: "</p>
+
+<p>To start a simulation with 3 agents including Isabella Rodriguez, Maria Lopez, and Klaus Mueller, enter the following:</p>
+
+<pre><code>base_the_ville_isabella_maria_klaus</code></pre>
+
+<p>Then it will prompt: "Enter the name of the new simulation:". Enter any name to represent your current simulation (e.g., just enter "mytest-simulation"). Note that you need to enter a different name each time you start, otherwise, the startup will fail.</p>
+
+<p>If you want to enter an existing name and start normally, you need to delete the folder with the same name already created in the directory <code>/home/ecs-assist-user/generative_agents/environment/frontend_server/storage</code> in advance.</p>
+
+<pre><code>simulation-test-1</code></pre>
+
+<p>In your browser, navigate to <code>http://{{Instance Public IP}}:8000/simulator_home</code>. You should see the map of Smallville and a list of active agents on the map. You can move around the map using the keyboard arrow keys. Please keep this tab open. To run the simulation, type the following command in your simulation server when responding to the "Enter option" prompt:</p>
+
+<pre><code>run &lt;step-count&gt;</code></pre>
+
+<p>Please note that you need to replace <code>&lt;step-count&gt;</code> with an integer representing the number of game steps you want to simulate. For example, if you want to simulate 100 game steps, you should enter <code>run 100</code>. One game step represents 10 seconds of time in the game. Your simulation should be running, and you will see agents moving on the map in your browser (you can view the map using the up, down, left, and right arrow keys). Once the simulation run is complete, the "Enter option" prompt will reappear. At this point, you can simulate more steps by re-entering the run command and entering your desired number of game steps, exit the simulation without saving by entering <code>exit</code>, or save and exit by entering <code>fin</code>. The next time you run the simulation server, you can access the saved simulation by providing your simulation name as the forked simulation. This will allow you to restart the simulation from where you left off.</p>
+
+<h3>More Features</h3>
+
+<ul>
+    <li>Please refer to the <a href="https://github.com/joonspk-research/generative_agents" target="_blank">Generative Agents GitHub Official Documentation</a>.</li>
+</ul>
