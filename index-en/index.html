@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="计算巢是阿里云开放给企业应用服务商的服务管理平台。服务商能够在计算巢上发布私有化部署服务，为其客户提供云上软件一键部署的能力；同时也支持全托管模式的服务，赋能服务商托管其客户资源。">
+  <title>Index en - Aliyun 计算巢 x Demo</title>
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+  <link rel="stylesheet" href="../css/theme.css">
+  
+
+  
+
+  
+  
+
+  
+    <script src="../search/main.js"></script>
+  
+
+  
+
+  <script src="../js/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-inner">
+        <div class="logo">
+          <img src="./img/logo-2x.png">
+        </div>
+        <div class="nav-list">
+          <ul>
+          
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content theme-github">
+      
+      <div class="content-inner">        
+        
+        <h1>Generative Agents Community Edition Deployment Documentation</h1>
+
+<h2>Overview</h2>
+
+<p>The Generative Agents Community Edition is a service deployed based on the open-source code from the paper "Generative Agents: Interactive Simulacra of Human Behavior," published in April 2023 by researchers from Stanford University and Google Research. This study used technologies like ChatGPT to simulate a scenario where 25 characters live together in a virtual world. These characters possess distinct fictional personalities and engage in activities through spontaneous actions. Set in a retro RPG-style environment, they have independent lifestyle patterns, ranging from waking up and working to playing. Characters can communicate via natural language, exchanging information and forming memories through encounters and conversations.</p>
+
+<p>In an evaluation, these generated agents produced credible individual and emergent social behaviors. For example, starting from a user-specified concept where one agent wanted to host a Valentine's Day party, the agents proactively invited others to the party over the next two days, made new acquaintances, arranged dates at the party, and coordinated to attend together at the appropriate time. The paper demonstrates that by integrating Large Language Models with computational interactive agents, this work introduces architectural and interaction patterns that enable credible simulations of human behavior.</p>
+
+<p>Compute Nest has now listed Generative Agents based on open-source code. You only need to select the Elastic Compute Service (ECS) parameters on the creation page, and Compute Nest will automatically create an ECS instance with Generative Agents for you. After creation, you simply log in to the ECS to experience the Generative Agents virtual community. This document introduces how to activate the Generative Agents service on Compute Nest, as well as the deployment process and usage instructions. If you encounter any issues during use, feedback and discussion are welcome.</p>
+
+<h2>Instance Description</h2>
+
+<p>The Generative Agents deployment is the community open-source version. For source code, please refer to the <a href="https://github.com/joonspk-research/generative_agents" target="_blank">Github Repo</a>.</p>
+
+<h2>Deployment Process</h2>
+
+<h3>0. Preparation</h3>
+
+<p>Before formally using the service, you need an Alibaba Cloud account to access and create resources such as ECS and VPC.</p>
+
+<ul>
+    <li>If you are using a personal account, you can create service instances directly.</li>
+    <li>If you are using a RAM user to create service instances, and it is your first time using Alibaba Cloud Compute Nest:
+        <ul>
+            <li>You need to add permissions for the corresponding resources to the RAM user account before creating the service instance. For detailed operations on adding RAM permissions, please refer to <a href="https://help.aliyun.com/document_detail/121945.html" target="_blank">Authorize RAM Users</a>. The required permissions are listed in the table below.</li>
+            <li>You also need to authorize the creation of associated roles. Refer to the figure below and select <strong>Agree to Authorize and Create Associated Role</strong>.</li>
+        </ul>
+    </li>
+</ul>
+
+<table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+        <tr>
+            <th>Permission Policy Name</th>
+            <th>Remarks</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>AliyunECSFullAccess</td>
+            <td>Permission to manage Elastic Compute Service (ECS)</td>
+        </tr>
+        <tr>
+            <td>AliyunVPCFullAccess</td>
+            <td>Permission to manage Virtual Private Cloud (VPC)</td>
+        </tr>
+        <tr>
+            <td>AliyunROSFullAccess</td>
+            <td>Permission to manage Resource Orchestration Service (ROS)</td>
+        </tr>
+        <tr>
+            <td>AliyunComputeNestUserFullAccess</td>
+            <td>User-side permission to manage Compute Nest services</td>
+        </tr>
+        <tr>
+            <td>AliyunCloudMonitorFullAccess</td>
+            <td>Permission to manage Cloud Monitor</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>Additionally, since Generative Agents calls OpenAI's text-davinci-003 model at the底层 layer, you need to register an OpenAI account in advance. This account must have permission to call the OpenAI API.</p>
+
+<h3>1. Deployment Entry</h3>
+
+<p>You can search for "Generative Agents Community Edition" in Alibaba Cloud Compute Nest, or quickly reach it via the deployment link below:</p>
+
+<p><a href="https://computenest.console.aliyun.com/user/cn-hangzhou/serviceInstanceCreate?ServiceId=service-744d0d3d4a4548a2812b" target="_blank">Deployment Link</a></p>
+
+<h3>2. Create Generative Agents Service Instance</h3>
+
+<h4>2.1 Parameter List</h4>
+
+<p>During the process of creating a service instance, you need to configure the parameter list for the service instance information, as detailed below:</p>
+
+<table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+        <tr>
+            <th>Parameter Group</th>
+            <th>Parameter Item</th>
+            <th>Example</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan="1">Service Instance Name</td>
+            <td>N/A</td>
+            <td>test</td>
+            <td>Name of the instance</td>
+        </tr>
+        <tr>
+            <td rowspan="1">Region</td>
+            <td>N/A</td>
+            <td>China (Hangzhou)</td>
+            <td>Select the region for the service instance. It is recommended to select the nearest region to obtain better network latency.</td>
+        </tr>
+        <tr>
+            <td rowspan="1">Billing Configuration</td>
+            <td>Billing Method</td>
+            <td>Pay-As-You-Go</td>
+            <td>Select the billing method based on actual needs.</td>
+        </tr>
+        <tr>
+            <td rowspan="1">ECS Instance Configuration</td>
+            <td>Instance Type</td>
+            <td>ecs.g6.large</td>
+            <td>Select the instance specification based on actual needs.</td>
+        </tr>
+        <tr>
+            <td rowspan="1">ECS Instance Login Information</td>
+            <td>Instance Password</td>
+            <td>********</td>
+            <td>Set the instance password. Length: 8-30 characters. Must contain at least three of the following: uppercase letters, lowercase letters, digits, and special symbols ()`~!@#$%^&*_-+={}[]:;'<>,.?/</td>
+        </tr>
+        <tr>
+            <td rowspan="1">OpenAI Key Configuration</td>
+            <td>OpenAI Key</td>
+            <td>sk-xxx</td>
+            <td>OpenAI Key. Using Generative Agents will deduct fees from the account corresponding to this key. This key is provided by OpenAI, and Alibaba Cloud does not process this key in any way. By default, it uses the text-davinci-003 model. Log in to visit the <a href="https://openai.com/" target="_blank">OpenAI Official Website</a>.</td>
+        </tr>
+        <tr>
+            <td rowspan="1">Availability Zone Configuration</td>
+            <td>Availability Zone</td>
+            <td>Zone I</td>
+            <td>Different availability zones within the region. Ensure the zone has available resources.</td>
+        </tr>
+        <tr>
+            <td rowspan="3">VPC Settings</td>
+            <td>Create New VPC?</td>
+            <td>Yes</td>
+            <td>If yes, Compute Nest will automatically create a VPC and VSwitch. If no, you need to fill in the IDs of existing VPC and VSwitch.</td>
+        </tr>
+        <tr>
+            <td>VPC Instance ID</td>
+            <td>vpc-xxx</td>
+            <td>Select the VPC ID based on actual situation.</td>
+        </tr>
+        <tr>
+            <td>VSwitch Instance ID</td>
+            <td>vsw-xxx</td>
+            <td>Select the VSwitch ID based on actual situation. If the VSwitch cannot be found, try switching regions and availability zones.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h4>2.2 Specific Steps</h4>
+
+<p>Create the service by following the steps below:</p>
+
+<ol>
+    <li>Create a service instance and fill in the service instance name (optional).</li>
+    <li>Select the region, such as "Singapore" in the figure below.</li>
+    <li>Select the instance type: Default is ecs.g6.large.</li>
+    <li>Configure the instance password.</li>
+    <li><strong>OpenAI Key Configuration:</strong> Enter the OpenAI Key corresponding to your OpenAI account, formatted as "sk-...". Compute Nest only passes this OPENAI Key to Generative Agents as a credential for calling the API and will not perform any operations such as recording, validation, or authentication. To ensure normal subsequent use, please ensure that the account corresponding to this Key has access permissions and sufficient balance.</li>
+    <li>Select the deployment zone, such as "Zone A" in the figure below.</li>
+    <li><strong>VPC Settings:</strong> Choose to create a new one or fill in existing VPC/VSwitch.</li>
+    <li>Click Next to enter the order confirmation page.</li>
+    <li>Check the checkbox for "I have read and agree to the 'Compute Nest Service Agreement'".</li>
+    <li>Click "Create Now" in the bottom left corner to create the service instance.</li>
+</ol>
+
+<h3>3. Start Generative Agents Service</h3>
+
+<p><strong>View Service Instance:</strong> After the service instance is successfully created, the deployment takes about 1-2 minutes. Once deployment is complete, you can see the corresponding service instance on the page.</p>
+
+<p>Click on the service instance to enter the service instance details.</p>
+
+<p>Click the login address to view the following interface in your browser, indicating that the frontend service has started successfully:</p>
+
+<p>Next, you need to start the backend service via command-line interaction. First, log in to the ECS instance. Click: <strong>Resources > Remote Connection > Password-Free Login</strong>.</p>
+
+<p>Select <strong>Session Management - Cloud Assistant</strong> and click Confirm to enter the ECS.</p>
+
+<p>After entering the instance, execute the following commands to start the backend simulator service:</p>
+
+<pre><code>sudo su
+conda activate agent
+cd /home/ecs-assist-user/generative_agents/reverie/backend_server
+python reverie.py</code></pre>
+
+<p>Upon successful execution, you will see the following output, appearing as a command prompt asking: "Enter the name of the forked simulation: "</p>
+
+<p>To start a simulation with 3 agents including Isabella Rodriguez, Maria Lopez, and Klaus Mueller, enter the following:</p>
+
+<pre><code>base_the_ville_isabella_maria_klaus</code></pre>
+
+<p>Then it will prompt: "Enter the name of the new simulation:". Enter any name to represent your current simulation (e.g., just enter "mytest-simulation"). Note that you need to enter a different name each time you start, otherwise, the startup will fail.</p>
+
+<p>If you want to enter an existing name and start normally, you need to delete the folder with the same name already created in the directory <code>/home/ecs-assist-user/generative_agents/environment/frontend_server/storage</code> in advance.</p>
+
+<pre><code>simulation-test-1</code></pre>
+
+<p>In your browser, navigate to <code>http://{{Instance Public IP}}:8000/simulator_home</code>. You should see the map of Smallville and a list of active agents on the map. You can move around the map using the keyboard arrow keys. Please keep this tab open. To run the simulation, type the following command in your simulation server when responding to the "Enter option" prompt:</p>
+
+<pre><code>run &lt;step-count&gt;</code></pre>
+
+<p>Please note that you need to replace <code>&lt;step-count&gt;</code> with an integer representing the number of game steps you want to simulate. For example, if you want to simulate 100 game steps, you should enter <code>run 100</code>. One game step represents 10 seconds of time in the game. Your simulation should be running, and you will see agents moving on the map in your browser (you can view the map using the up, down, left, and right arrow keys). Once the simulation run is complete, the "Enter option" prompt will reappear. At this point, you can simulate more steps by re-entering the run command and entering your desired number of game steps, exit the simulation without saving by entering <code>exit</code>, or save and exit by entering <code>fin</code>. The next time you run the simulation server, you can access the saved simulation by providing your simulation name as the forked simulation. This will allow you to restart the simulation from where you left off.</p>
+
+<h3>More Features</h3>
+
+<ul>
+    <li>Please refer to the <a href="https://github.com/joonspk-research/generative_agents" target="_blank">Generative Agents GitHub Official Documentation</a>.</li>
+</ul>
+        
+      </div>
+
+      <div class="copyrights">© 2009-2022 Aliyun.com 版权所有</div>
+    </div>
+  </div>
+  
+  <!--
+  MkDocs version      : 1.6.1
+  Docs Build Date UTC : 2026-04-10 09:05:25.286970+00:00
+  -->
+</body>
+</html>
